@@ -53,9 +53,9 @@ class MainView(ui.View):
         #self.tint_color = '#494949'
         self.background_color = 'black'
         print('size')
-        print(scene.get_screen_size)
+        print(scene.get_screen_size())
         print('self scale')
-        print(scene.get_screen_scale)
+        print(scene.get_screen_scale())
         
         # Setup of UI Features
         
