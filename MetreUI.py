@@ -24,6 +24,7 @@ import ui
 import Image
 import console
 from objc_util import on_main_thread
+import scene
 
 
 # Metre imports
@@ -51,12 +52,22 @@ class MainView(ui.View):
         self.flex = 'WH'
         #self.tint_color = '#494949'
         self.background_color = 'black'
+        print('size')
+        print(scene.get_screen_size)
+        print('self scale')
+        print(scene.get_screen_scale)
         
         # Setup of UI Features
         
         self.v = ui.load_view('mainview')
         self.v.frame = self.bounds
         self.v.flex = 'WH'
+        print('view dimensions x, y , bounds, width, height')
+        print(self.v.x)
+        print(self.v.y)
+        print(self.v.bounds)
+        print(self.v.width)
+        print(self.v.height)
         
         # Console
         self.app_console = self.v['console']
@@ -123,6 +134,11 @@ class MainView(ui.View):
         # Set up UI Functions
         self.getData()
         self.results_table = self.v['results_table']
+        print('Specs for results_table')
+        print(self.results_table.x)
+        print(self.results_table.y)
+        print(self.results_table.width)
+        print(self.results_table.height)
         self.restable_inst = ResultsTable(self.v, self.results_table, self.acetone, self.etime)
         self.add_subview(self.v)
         
