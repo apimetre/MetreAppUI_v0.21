@@ -53,9 +53,9 @@ class MainView(ui.View):
         #self.tint_color = '#494949'
         self.background_color = 'black'
         print('size')
-        print(scene.get_screen_size())
+        print(scene.get_screen_size)
         print('self scale')
-        print(scene.get_screen_scale())
+        print(scene.get_screen_scale)
         
         # Setup of UI Features
         
@@ -105,6 +105,19 @@ class MainView(ui.View):
         # Version label
         self.vlabel = self.v['vlabel']
         self.vlabel.text = APP_VERSION
+        
+        #App Title
+        print('M location')
+        print(self.v['M'].x)
+        print(self.v['M'].y)
+        print(self.v['M'].width)
+        print(self.v['M'].height)
+        
+        print('etre Location')
+        print(self.v['label2'].x)
+        print(self.v['label2'].y)
+        print(self.v['label2'].width)
+        print(self.v['label2'].height)
         
         # Setup
         self.cwd = os.getcwd()
