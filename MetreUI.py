@@ -307,7 +307,15 @@ class MainView(ui.View):
                 self.varray = np.array(vectorized)
         if len(self.acetone) <=0:
             self.varray = []
-        
+        try:
+            self.notes = self.log['Notes']
+        except:
+            self.notes = []
+            for i in range(0, len(self.log['Acetone'])):
+                self.notes.append('')
+            self.log['Notes'] = self.notes
+            with open(self.cwd + "/log/log_003.json", "w") as outfile:
+                json.dump(self.log, outfile)        
     ########################################
     def blink(self):     
         if self.d5.alpha == 0.5:
@@ -423,7 +431,8 @@ class MainView(ui.View):
                                   'DateTime': response_json['DateTime'],
                                   'Acetone': float(response_json['Acetone']),
                                   'Sensor': response_json['sensor'],
-                                  'Instr': response_json['instrument']}
+                                  'Instr': response_json['instrument'],
+                                  'Notes': ''}
                        for key, value in self.log.items():
                           self.log[key].append(newlog[key])
                        with open(self.cwd + "/log/log_003.json", "w") as outfile:
