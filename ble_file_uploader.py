@@ -249,7 +249,7 @@ class BleUploader():
         time.sleep(2)
         if self.py_ble_uart.peripheral:
             self.v_['ble_status'].text = 'Connected'
-            print(self.console_box.height)
+            print(self.console_box_.height)
             self.v_['results_table'].y = self.v_['results_table'].y - self.console_box_.height
             self.console_box_.text = "Connected"
             self.d0.alpha = 0.75
