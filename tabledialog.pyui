@@ -5,7 +5,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{6, 125}, {288, 69}}",
+        "frame" : "{{6, 15}, {288, 49}}",
         "class" : "TextView",
         "attributes" : {
           "uuid" : "37A2E8F2-7DBD-46A0-AE3C-D9532B69CC58",
@@ -32,7 +32,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{193, 202}, {101, 34}}",
+        "frame" : "{{193, 65}, {101, 16}}",
         "class" : "Button",
         "attributes" : {
           "flex" : "WHLRTB",
@@ -42,7 +42,7 @@
           "font_bold" : true,
           "class" : "Button",
           "name" : "update",
-          "font_size" : 15
+          "font_size" : 12
         },
         "selected" : false
       },
@@ -50,7 +50,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{6, 2}, {288, 105}}",
+        "frame" : "{{6, 83}, {288, 105}}",
         "class" : "Label",
         "attributes" : {
           "flex" : "WHLRTB",
@@ -71,7 +71,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{6, 202}, {92, 32}}",
+        "frame" : "{{7, 65}, {92, 16}}",
         "class" : "Button",
         "attributes" : {
           "flex" : "WHLRTB",
@@ -81,7 +81,7 @@
           "font_bold" : true,
           "class" : "Button",
           "name" : "replace",
-          "font_size" : 15
+          "font_size" : 12
         },
         "selected" : false
       },
@@ -89,11 +89,11 @@
         "nodes" : [
 
         ],
-        "frame" : "{{6, 102}, {150, 32}}",
+        "frame" : "{{0, -1}, {150, 15}}",
         "class" : "Label",
         "attributes" : {
-          "name" : "label1",
           "flex" : "WHLRTB",
+          "name" : "label1",
           "text_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
           "frame" : "{{75, 104}, {150, 32}}",
           "uuid" : "C0B44B49-8A71-42D5-AADA-BEDCC5AEC4BC",
@@ -103,7 +103,7 @@
           "font_size" : 10,
           "font_name" : "HelveticaNeue-Italic"
         },
-        "selected" : true
+        "selected" : false
       }
     ],
     "frame" : "{{0, 0}, {300, 240}}",
