@@ -51,23 +51,23 @@ class MainView(ui.View):
         self.name = "MetreAce Home"
         self.flex = 'WH'
         #self.tint_color = '#494949'
-        self.background_color = 'black'
-        print('size')
-        print(scene.get_screen_size)
-        print('self scale')
-        print(scene.get_screen_scale)
+        if DEBUG:
+            print('Screen size')
+            print(scene.get_screen_size())
+        self.view_x = scene.get_screen_size()[0]
+        self.view_y = scene.get_screen_size()[1]
+        
+
         
         # Setup of UI Features
         
         self.v = ui.load_view('mainview')
         self.v.frame = self.bounds
         self.v.flex = 'WH'
-        print('view dimensions x, y , bounds, width, height')
-        print(self.v.x)
-        print(self.v.y)
-        print(self.v.bounds)
-        print(self.v.width)
-        print(self.v.height)
+        
+        self.xscaler = self.view_x/320
+        self.yscaler = self.view_y/480
+
         
         # Console
         self.app_console = self.v['console']
@@ -106,18 +106,15 @@ class MainView(ui.View):
         self.vlabel = self.v['vlabel']
         self.vlabel.text = APP_VERSION
         
-        #App Title
-        print('M location')
-        print(self.v['M'].x)
-        print(self.v['M'].y)
-        print(self.v['M'].width)
-        print(self.v['M'].height)
+        #Center app title based on bounds
+        M_w =self.v['etre'].x - self.v['M'].x
+        etre_w = self.v['A'].x - self.v['etre'].x
+        A_w = self.v['ce'].x - self.v['A'].x
         
-        print('etre Location')
-        print(self.v['label2'].x)
-        print(self.v['label2'].y)
-        print(self.v['label2'].width)
-        print(self.v['label2'].height)
+        self.v['etre'].x = self.v['etre'].x * self.xscaler - etre_w/2 
+        self.v['M'].x = self.v['etre'].x - M_w
+        self.v['A'].x = self.v['etre'].x + etre_w
+        self.v['ce'].x = self.v['A'].x + A_w
         
         # Setup
         self.cwd = os.getcwd()
@@ -152,7 +149,7 @@ class MainView(ui.View):
         print(self.results_table.y)
         print(self.results_table.width)
         print(self.results_table.height)
-        self.restable_inst = ResultsTable(self.v, self.results_table, self.acetone, self.etime)
+        self.restable_inst = ResultsTable(self.v, self.results_table, self.acetone, self.etime, self.xscaler, self.yscaler)
         self.add_subview(self.v)
         
         # Implementation of navigation view/mainview
@@ -234,7 +231,7 @@ class MainView(ui.View):
     
         if not loaded:
             self.ble_status.text= 'Connecting...'
-            ble_file_uploader = BleUploader(self.app_console, self.ble_status_icon, self.v, APP_VERSION, DEBUG)
+            ble_file_uploader = BleUploader(self.app_console, self.ble_status_icon, self.v,  self.xscaler, self.yscaler, APP_VERSION, DEBUG)
             ready_status = ble_file_uploader.execute_transfer()
             
             if ready_status:
@@ -347,7 +344,7 @@ class MainView(ui.View):
     
     def main(self):
         self.ble_status.alpha = 0.5 
-        self.calc_icon.apha = 0.1
+        self.calc_icon.apha = 1
         global process_done
         process_done = False
         
