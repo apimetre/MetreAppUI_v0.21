@@ -28,7 +28,7 @@ from lib.UIFeatures import ConsoleAlert
 
 
 class BleUploader():
-    def __init__(self, console_box_, ble_status_icon_, v_, version_id, debug_status):
+    def __init__(self, console_box_, ble_status_icon_, v_, xscale, yscale, version_id, debug_status):
         self.console_box_ = console_box_
         self.ble_status_icon_ = ble_status_icon_
         self.v_ = v_
@@ -40,7 +40,10 @@ class BleUploader():
         self.DEBUG = False
         self.CONSOLE_WIDTH = 140
         self.INDENT_STR = '        '
+        self.xscale = xscale
+        self.yscale = yscale
         self.DEBUG = debug_status
+        
         
         self.instr_icon = self.v_['imageview']
         self.d0 = self.v_['dot0']
@@ -75,32 +78,32 @@ class BleUploader():
                 print(line)
 
     def blink(self):        
-        if self.d0.alpha == 0.5:
-            self.d1.alpha= 0.5
+        if self.d0.alpha == 0.75:
+            self.d1.alpha= 0.75
             self.d2.alpha= 0
             self.d3.alpha= 0
             self.d4.alpha= 0
             self.d0.alpha= 0
-        elif self.d1.alpha == 0.5:
-            self.d2.alpha=  0.5
+        elif self.d1.alpha == 0.75:
+            self.d2.alpha=  0.75
             self.d3.alpha=  0
             self.d4.alpha= 0
             self.d0.alpha=  0
             self.d1.alpha=  0
-        elif self.d2.alpha == 0.5:
-            self.d3.alpha=  0.5
+        elif self.d2.alpha == 0.75:
+            self.d3.alpha=  0.75
             self.d4.alpha= 0
             self.d0.alpha=  0
             self.d1.alpha=  0
             self.d2.alpha=  0
-        elif self.d3.alpha == 0.5:
-            self.d4.alpha=  0.5
+        elif self.d3.alpha == 0.75:
+            self.d4.alpha=  0.75
             self.d0.alpha= 0
             self.d1.alpha=  0
             self.d2.alpha=  0
             self.d3.alpha=  0         
-        elif self.d4.alpha == 0.5:
-            self.d0.alpha=  0.5
+        elif self.d4.alpha == 0.75:
+            self.d0.alpha=  0.75
             self.d1.alpha= 0
             self.d2.alpha=  0
             self.d3.alpha=  0
@@ -130,7 +133,7 @@ class BleUploader():
             self.console_box_.alpha =1
             self.console_box_.text = ("Connecting to MetreAce instrument")
             #dev_icon_path = 'images/MetreAceDev.png'
-            self.d0.alpha = 0.5
+            self.d0.alpha = 0.75
             #self.instr_icon.image = ui.Image.named(dev_icon_path)
             self.instr_icon.alpha = 0.25
             
@@ -245,10 +248,11 @@ class BleUploader():
             
         time.sleep(2)
         if self.py_ble_uart.peripheral:
-            print('this is what alpha d0 is ' + str(self.d0.alpha))
             self.v_['ble_status'].text = 'Connected'
+            print(self.console_box.height)
+            self.v_['results_table'].y = self.v_['results_table'].y - self.console_box_.height
             self.console_box_.text = "Connected"
-            self.d0.alpha = 0.5
+            self.d0.alpha = 0.75
             if self.DEBUG:
                 print('will be using ' + self.cwd + '/data_files/dat_files/ as current working directory for writing log files')
             global counter
