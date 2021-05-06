@@ -111,7 +111,7 @@
         "class" : "Label",
         "attributes" : {
           "flex" : "WHTB",
-          "name" : "label2",
+          "name" : "etre",
           "text_color" : "RGBA(0.544811,0.544811,0.544811,1.000000)",
           "frame" : "{{85, 224}, {150, 32}}",
           "uuid" : "28C44BC5-EAD8-4F83-9B4D-0E4492FA9AB7",
@@ -189,7 +189,7 @@
         "class" : "Label",
         "attributes" : {
           "flex" : "WHTB",
-          "name" : "label1",
+          "name" : "ce",
           "text_color" : "RGBA(0.541176,0.541176,0.541176,1.000000)",
           "frame" : "{{85, 224}, {150, 32}}",
           "uuid" : "6C45D54E-44C2-4F55-8860-955F564BADD9",
