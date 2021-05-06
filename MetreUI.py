@@ -314,6 +314,14 @@ class MainView(ui.View):
             for i in range(0, len(self.log['Acetone'])):
                 self.notes.append('')
             self.log['Notes'] = self.notes
+        try:
+            self.keys = self.log['Key']
+        except:
+            self.keys = []
+            for i in range(0, len(self.log['Acetone'])):
+                self.keys.append('')
+            self.log['Notes'] = self.notes
+            self.log['Key'] = self.keys
             with open(self.cwd + "/log/log_003.json", "w") as outfile:
                 json.dump(self.log, outfile)        
     ########################################
@@ -432,7 +440,8 @@ class MainView(ui.View):
                                   'Acetone': float(response_json['Acetone']),
                                   'Sensor': response_json['sensor'],
                                   'Instr': response_json['instrument'],
-                                  'Notes': ''}
+                                  'Notes': '',
+                                  'Key': ''}
                        for key, value in self.log.items():
                           self.log[key].append(newlog[key])
                        with open(self.cwd + "/log/log_003.json", "w") as outfile:
