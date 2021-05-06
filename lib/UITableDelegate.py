@@ -3,6 +3,7 @@ import os
 import numpy as np
 import datetime as datetime
 import time
+import json
 from pytz import timezone
 
 # Pythonista imports
@@ -21,13 +22,17 @@ class TData (ui.ListDataSource):
     
 
 class ResultsTable(object):
-    def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale):
+    def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale, cwd):
         self.subview = subview_
         self.table = table_
         self.etime = etime_res
         self.ac = ac_res       
         self.xscale = xscale
         self.yscale = yscale
+        self.cwd = cwd
+        self.log_src = (self.cwd + '/log/log_003.json')
+        
+        
         if self.xscale > 2:
             self.spacer = '    '
         else:
@@ -38,24 +43,102 @@ class ResultsTable(object):
         for i in self.etime:
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         for i in self.sorted_etime:
-            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
+            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
         for i in dt_list:
             results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
 
+                
         self.table_items = results        
         self.list_source = TData(reversed(self.table_items))
         self.table.data_source = self.list_source
+        self.table.delegate.action = self.write_notes
+        
     def update_table(self, new_ac_res, new_etime_res):
         self.table.reload()
         new_sorted_etime = sorted(list(new_etime_res))
         dt_list = []
         orig_dt_list = [] 
         for i in new_sorted_etime:
-            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
+            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         for i in new_etime_res:
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
         for i in dt_list:
             results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
         self.table.data_source =  TData(reversed(results))
+
+    def write_notes(self, sender):
+        with open(self.log_src) as json_file:
+            self.log = json.load(json_file)
+            
+            
+        # Pop-up a textview with an enter button
+        # Display text stored in log
+        # Retrieve user text if entered
+        # Update json log of data
+        
+        
+        print(self.list_source.items[sender.selected_row])
+        print(sender.selected_row)
+        
+        self.row_ix = sender.selected_row
+        self.log_entry = self.log['Notes'][self.row_ix]
+        
+        self.tdialog = ui.load_view('tabledialog')
+        self.tdialog.name = self.list_source.items[sender.selected_row]
+        self.tdialog.frame = (0,0,600,150)
+        update_button = self.tdialog['update']
+        replace_button = self.tdialog['replace']
+        self.tdialog['test_notes'].text = self.log_entry
+        update_button.action = self.update_log_notes
+        replace_button.action = self.replace_log_notes
+
+        self.tdialog.present('Sheet')
+        
+
+    def update_log_notes(self, sender):
+
+        current_entry = self.log_entry
+        entry_to_add = self.tdialog['text_entry'].text
+        try:
+            if entry_to_add[0].isupper():
+                try:
+                    if current_entry[-1] != '.':
+                        spacer = '. '
+                    else:
+                        spacer = '  '
+                except:
+                    spacer = ''
+            else:
+                try:
+                    if current_entry[-1] != ',':
+                        spacer = ', '
+                    else:
+                        spacer = '  '
+                except:
+                    spacer = ''           
+
+            new_entry = self.log_entry + spacer + entry_to_add 
+            self.log['Notes'][self.row_ix] = new_entry
+            
+            with open(self.log_src, "w") as outfile:
+                json.dump(self.log, outfile)
+                    
+            self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
+            self.tdialog['text_entry'].text = ''
+        except:
+            self.tdialog['text_entry'].text = ''
+
+    def replace_log_notes(self, sender):
+
+        current_entry = self.log_entry
+        entry_to_add = self.tdialog['text_entry'].text           
+        
+        self.log['Notes'][self.row_ix] = entry_to_add
+        
+        with open(self.log_src, "w") as outfile:
+            json.dump(self.log, outfile)
+                
+        self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
+        self.tdialog['text_entry'].text = ''        
