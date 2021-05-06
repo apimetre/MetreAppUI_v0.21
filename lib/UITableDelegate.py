@@ -10,11 +10,13 @@ import ui
 
 
 class ResultsTable(object):
-	def __init__(self, subview_, table_, ac_res, etime_res):
+	def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale):
 		self.subview = subview_
 		self.table = table_
 		self.etime = etime_res
 		self.ac = ac_res       
+		self.xscale = xscale
+		self.yscale = yscale
 		self.sorted_etime = sorted(list(self.etime))
 		dt_list = []     
 		orig_dt_list = []   
