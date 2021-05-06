@@ -111,7 +111,7 @@ class MainView(ui.View):
         etre_w = self.v['A'].x - self.v['etre'].x
         A_w = self.v['ce'].x - self.v['A'].x
         
-        self.v['etre'].x = (self.v.width) * self.xscaler  - etre_w/2 
+        self.v['etre'].x = self.star_button.x * self.xscaler + M_w * self.xscaler
         self.v['M'].x = self.v['etre'].x - M_w
         self.v['A'].x = self.v['etre'].x + etre_w 
         self.v['ce'].x = self.v['A'].x + A_w
