@@ -11,12 +11,15 @@ import ui
 
 
 class TData (ui.ListDataSource):
-    def __init__(self, items=None):
+    def __init__(self, scale, items=None):
         ui.ListDataSource.__init__(self, items)
+        self.xscale = scale
         
     def tableview_cell_for_row(self, tableview, section, row):
         cell = ui.TableViewCell()
         cell.text_label.text = str(self.items[row])
+        if self.xscale < 2:
+        	cell.text_label.font = ("Helvetica", 10)
         cell.text_label.alignment = ui.ALIGN_CENTER
         return cell
     
@@ -32,7 +35,9 @@ class ResultsTable(object):
         self.cwd = cwd
         self.log_src = (self.cwd + '/log/log_003.json')
         
-        
+        with open(self.log_src) as json_file:
+            self.log = json.load(json_file)        
+            
         if self.xscale > 2:
             self.spacer = '    '
         else:
@@ -46,11 +51,11 @@ class ResultsTable(object):
             dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
         for i in dt_list:
-            results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
+            results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
 
                 
         self.table_items = results        
-        self.list_source = TData(reversed(self.table_items))
+        self.list_source = TData(self.xscale, reversed(self.table_items))
         self.table.data_source = self.list_source
         self.table.delegate.action = self.write_notes
         
@@ -65,8 +70,8 @@ class ResultsTable(object):
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
         for i in dt_list:
-            results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
-        self.table.data_source =  TData(reversed(results))
+            results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
+        self.table.data_source =  TData(self.xscale, reversed(results))
 
     def write_notes(self, sender):
         with open(self.log_src) as json_file:
@@ -85,7 +90,7 @@ class ResultsTable(object):
         self.row_ix = sender.selected_row
         self.log_entry = self.log['Notes'][self.row_ix]
         
-        self.tdialog = ui.load_view(self.cwd + '/tabledialog.pyui')
+        self.tdialog = ui.load_view('tabledialog')
         self.tdialog.name = self.list_source.items[sender.selected_row]
         self.tdialog.frame = (0,0,600,150)
         update_button = self.tdialog['update']
@@ -122,12 +127,13 @@ class ResultsTable(object):
 
             new_entry = self.log_entry + spacer + entry_to_add 
             self.log['Notes'][self.row_ix] = new_entry
-            
+            self.log['Key'] = "*"
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
             self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
             self.tdialog['text_entry'].text = ''
+            
         except:
             self.tdialog['text_entry'].text = ''
         self.tdialog['text_entry'].end_editing()
@@ -138,10 +144,10 @@ class ResultsTable(object):
         entry_to_add = self.tdialog['text_entry'].text           
         
         self.log['Notes'][self.row_ix] = entry_to_add
-        
+        self.log['Key'] = "*"        
         with open(self.log_src, "w") as outfile:
             json.dump(self.log, outfile)
                 
         self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
         self.tdialog['text_entry'].text = ''     
-        self.tdialog['text_entry'].end_editing()   
+        self.tdialog['text_entry'].end_editing()  
