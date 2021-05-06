@@ -93,6 +93,7 @@ class ResultsTable(object):
         self.tdialog['test_notes'].text = self.log_entry
         update_button.action = self.update_log_notes
         replace_button.action = self.replace_log_notes
+        self.tdialog.frame = (0, 0, 600, 150)
 
         self.tdialog.present('Sheet')
         
@@ -129,6 +130,7 @@ class ResultsTable(object):
             self.tdialog['text_entry'].text = ''
         except:
             self.tdialog['text_entry'].text = ''
+        self.tdialog['text_entry'].end_editing()
 
     def replace_log_notes(self, sender):
 
@@ -141,4 +143,5 @@ class ResultsTable(object):
             json.dump(self.log, outfile)
                 
         self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
-        self.tdialog['text_entry'].text = ''        
+        self.tdialog['text_entry'].text = ''     
+        self.tdialog['text_entry'].end_editing()   
