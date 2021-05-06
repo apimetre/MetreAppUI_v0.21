@@ -17,6 +17,10 @@ class ResultsTable(object):
 		self.ac = ac_res       
 		self.xscale = xscale
 		self.yscale = yscale
+		if self.xscale > 2:
+			self.spacer = '    '
+		else:
+			self.spacer = '  '
 		self.sorted_etime = sorted(list(self.etime))
 		dt_list = []     
 		orig_dt_list = []   
@@ -26,7 +30,7 @@ class ResultsTable(object):
 			dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
 		results = []
 		for i in dt_list:
-			results.append(i + '    ' + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
+			results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
 
 		self.table_items = results        
 		self.list_source = ui.ListDataSource(reversed(self.table_items))
@@ -42,5 +46,5 @@ class ResultsTable(object):
 			orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
 		results = []
 		for i in dt_list:
-			results.append(i + '    ' + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
+			results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
 		self.table.data_source =  ui.ListDataSource(reversed(results))
