@@ -144,11 +144,10 @@ class MainView(ui.View):
         # Set up UI Functions
         self.getData()
         self.results_table = self.v['results_table']
-        print('Specs for results_table')
-        print(self.results_table.x)
-        print(self.results_table.y)
-        print(self.results_table.width)
-        print(self.results_table.height)
+        if self.xscaler > 2:
+            self.results_table.width = self.results_table.width/(self.xscaler/2)
+        self.results_table.x = self.star_button.x/2 + self.results_table.width/(4*2)
+
         self.restable_inst = ResultsTable(self.v, self.results_table, self.acetone, self.etime, self.xscaler, self.yscaler)
         self.add_subview(self.v)
         
