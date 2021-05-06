@@ -451,9 +451,10 @@ class MainView(ui.View):
         self.calc_icon.alpha = 0.1
                                             
         self.app_console.text = 'Test Processing and Upload Complete.'
-        time.sleep(3)
+        time.sleep(2.5)
         self.app_console.alpha = 0
         self.app_console.text = ''
+        self.results_table.y = self.results_table.y - self.app_console.height
         #self.star_button.alpha = 1
         self.connect_button.action = self.bleStatus()
         self.ble_status.alpha = 1
