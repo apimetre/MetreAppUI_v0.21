@@ -9,42 +9,53 @@ from pytz import timezone
 import ui
 
 
-class ResultsTable(object):
-	def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale):
-		self.subview = subview_
-		self.table = table_
-		self.etime = etime_res
-		self.ac = ac_res       
-		self.xscale = xscale
-		self.yscale = yscale
-		if self.xscale > 2:
-			self.spacer = '    '
-		else:
-			self.spacer = '  '
-		self.sorted_etime = sorted(list(self.etime))
-		dt_list = []     
-		orig_dt_list = []   
-		for i in self.etime:
-			orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-		for i in self.sorted_etime:
-			dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
-		results = []
-		for i in dt_list:
-			results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
+class TData (ui.ListDataSource):
+    def __init__(self, items=None):
+        ui.ListDataSource.__init__(self, items)
+        
+    def tableview_cell_for_row(self, tableview, section, row):
+        cell = ui.TableViewCell()
+        cell.text_label.text = str(self.items[row])
+        cell.text_label.alignment = ui.ALIGN_CENTER
+        return cell
+    
 
-		self.table_items = results        
-		self.list_source = ui.ListDataSource(reversed(self.table_items))
-		self.table.data_source = self.list_source
-	def update_table(self, new_ac_res, new_etime_res):
-		self.table.reload()
-		new_sorted_etime = sorted(list(new_etime_res))
-		dt_list = []
-		orig_dt_list = [] 
-		for i in new_sorted_etime:
-			dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
-		for i in new_etime_res:
-			orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-		results = []
-		for i in dt_list:
-			results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
-		self.table.data_source =  ui.ListDataSource(reversed(results))
+class ResultsTable(object):
+    def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale):
+        self.subview = subview_
+        self.table = table_
+        self.etime = etime_res
+        self.ac = ac_res       
+        self.xscale = xscale
+        self.yscale = yscale
+        if self.xscale > 2:
+            self.spacer = '    '
+        else:
+            self.spacer = '  '
+        self.sorted_etime = sorted(list(self.etime))
+        dt_list = []     
+        orig_dt_list = []   
+        for i in self.etime:
+            orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+        for i in self.sorted_etime:
+            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
+        results = []
+        for i in dt_list:
+            results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
+
+        self.table_items = results        
+        self.list_source = TData(reversed(self.table_items))
+        self.table.data_source = self.list_source
+    def update_table(self, new_ac_res, new_etime_res):
+        self.table.reload()
+        new_sorted_etime = sorted(list(new_etime_res))
+        dt_list = []
+        orig_dt_list = [] 
+        for i in new_sorted_etime:
+            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))		
+        for i in new_etime_res:
+            orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+        results = []
+        for i in dt_list:
+            results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm')
+        self.table.data_source =  TData(reversed(results))
