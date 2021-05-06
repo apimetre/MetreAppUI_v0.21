@@ -146,7 +146,7 @@ class MainView(ui.View):
         self.results_table = self.v['results_table']
         if self.xscaler > 2:
             self.results_table.width = self.results_table.width/(self.xscaler/2)
-            self.results_table.x = self.star_button.x/2 + self.results_table.width/(4*2)
+            self.results_table.x = self.star_button.x/2 + self.results_table.width/(4*2) - self.star_button.width/8
 
         self.restable_inst = ResultsTable(self.v, self.results_table, self.acetone, self.etime, self.xscaler, self.yscaler)
         self.add_subview(self.v)
