@@ -85,7 +85,7 @@ class ResultsTable(object):
         self.row_ix = sender.selected_row
         self.log_entry = self.log['Notes'][self.row_ix]
         
-        self.tdialog = ui.load_view('tabledialog')
+        self.tdialog = ui.load_view(self.cwd + '/tabledialog.pyui')
         self.tdialog.name = self.list_source.items[sender.selected_row]
         self.tdialog.frame = (0,0,600,150)
         update_button = self.tdialog['update']
