@@ -111,7 +111,7 @@ class MainView(ui.View):
         etre_w = self.v['A'].x - self.v['etre'].x
         A_w = self.v['ce'].x - self.v['A'].x
         
-        self.v['etre'].x = self.v['etre'].x * self.xscaler - etre_w/2 
+        self.v['etre'].x = self.v['etre'].x/2 * self.xscaler - etre_w/2 
         self.v['M'].x = self.v['etre'].x - M_w
         self.v['A'].x = self.v['etre'].x + etre_w
         self.v['ce'].x = self.v['A'].x + A_w
@@ -454,7 +454,7 @@ class MainView(ui.View):
         time.sleep(2.5)
         self.app_console.alpha = 0
         self.app_console.text = ''
-        self.results_table.y = self.results_table.y - self.app_console.height
+        self.results_table.y = self.results_table.y*2 - self.app_console.height/2
         #self.star_button.alpha = 1
         self.connect_button.action = self.bleStatus()
         self.ble_status.alpha = 1
