@@ -152,7 +152,7 @@ class ResultsTable(object):
 
             new_entry = self.log_entry + spacer + entry_to_add 
             self.log['Notes'][self.row_ix] = new_entry
-            self.log['Key'] = "*"
+            self.log['Key'][self.row_ix]  = "*"
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
@@ -171,7 +171,9 @@ class ResultsTable(object):
         
         self.log['Notes'][self.row_ix] = entry_to_add
         if self.entry_to_add != '':
-            self.log['Key'] = "*"        
+            self.log['Key'][self.row_ix]  = "*"  
+        else: 
+            self.log['Key'][self.row_ix]  = ''          
         with open(self.log_src, "w") as outfile:
             json.dump(self.log, outfile)
                 
