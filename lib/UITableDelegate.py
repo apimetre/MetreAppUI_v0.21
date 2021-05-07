@@ -50,9 +50,10 @@ class ResultsTable(object):
         for i in self.sorted_etime:
             dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
+        self.ref_list = []
         for i in dt_list:
             results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
-
+            self.ref_list.append(np.where(np.array(orig_dt_list) == i)[0][0])
                 
         self.table_items = results        
         self.list_source = TData(self.xscale, reversed(self.table_items))
@@ -77,8 +78,10 @@ class ResultsTable(object):
         for i in self.etime:
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
+        self.ref_list = []
         for i in dt_list:
             results.append(i + self.spacer + str(round(self.acetone[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm ' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
+            self.ref_list.append(np.where(np.array(orig_dt_list) == i)[0][0])
         self.table.data_source =  TData(self.xscale, reversed(results))
         
     def write_notes(self, sender):
@@ -127,8 +130,8 @@ class ResultsTable(object):
                     spacer = ''           
 
             new_entry = self.log_entry + spacer + entry_to_add 
-            self.log['Notes'][self.row_ix] = new_entry
-            self.log['Key'][self.row_ix]  = "*"
+            self.log['Notes'][np.array(self.ref_list)[self.row_ix]]  = new_entry
+            self.log['Key'][np.array(self.ref_list)[self.row_ix]]   = "*"
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
@@ -145,11 +148,11 @@ class ResultsTable(object):
         current_entry = self.log_entry
         entry_to_add = self.tdialog['text_entry'].text           
         
-        self.log['Notes'][self.row_ix] = entry_to_add
+        self.log['Notes'][np.array(self.ref_list)[self.row_ix]]  = entry_to_add
         if entry_to_add != '':
-            self.log['Key'][self.row_ix]  = "*"  
+            self.log['Key'][np.array(self.ref_list)[self.row_ix]]  = "*"  
         else: 
-            self.log['Key'][self.row_ix]  = ''          
+            self.log['Key'][np.array(self.ref_list)[self.row_ix]]   = ''          
         with open(self.log_src, "w") as outfile:
             json.dump(self.log, outfile)
                 
