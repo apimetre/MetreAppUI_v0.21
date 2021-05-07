@@ -72,6 +72,7 @@ class MainView(ui.View):
         # Console
         self.app_console = self.v['console']
         self.app_console.alpha = 0
+        self.orig_console_loc = self.app_console.y
        
         # Ble connection
         self.star_button = self.v['start_button']
@@ -276,6 +277,9 @@ class MainView(ui.View):
                 self.instr_icon.alpha = 0.1
                 self.connect_button.action = self.bleStatus()
                 self.connect_button.alpha =1
+                self.results_table.y != self.orig_console_loc:
+                    self.results_table.y = (self.results_table.y - self.app_console.height/2)*2*self.xscaler
+
             
         else:
             self.ble_icon_path = 'images/ble_disconnected.png'
@@ -472,7 +476,6 @@ class MainView(ui.View):
         self.app_console.alpha = 0
         self.app_console.text = ''
         self.results_table.y = (self.results_table.y - self.app_console.height/2)*2*self.xscaler
-        #self.star_button.alpha = 1
         self.connect_button.action = self.bleStatus()
         self.ble_status.alpha = 1
         
