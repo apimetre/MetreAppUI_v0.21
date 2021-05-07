@@ -5,7 +5,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{6, 15}, {288, 49}}",
+        "frame" : "{{6, 17}, {288, 49}}",
         "class" : "TextView",
         "attributes" : {
           "uuid" : "37A2E8F2-7DBD-46A0-AE3C-D9532B69CC58",
@@ -32,7 +32,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{193, 65}, {101, 16}}",
+        "frame" : "{{193, 70}, {101, 16}}",
         "class" : "Button",
         "attributes" : {
           "flex" : "WHLRTB",
@@ -50,7 +50,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{6, 83}, {288, 105}}",
+        "frame" : "{{6, 93}, {288, 105}}",
         "class" : "Label",
         "attributes" : {
           "flex" : "WHLRTB",
@@ -71,7 +71,7 @@
         "nodes" : [
 
         ],
-        "frame" : "{{7, 65}, {92, 16}}",
+        "frame" : "{{7, 70}, {92, 16}}",
         "class" : "Button",
         "attributes" : {
           "flex" : "WHLRTB",
@@ -83,13 +83,13 @@
           "name" : "replace",
           "font_size" : 12
         },
-        "selected" : false
+        "selected" : true
       },
       {
         "nodes" : [
 
         ],
-        "frame" : "{{0, -1}, {150, 15}}",
+        "frame" : "{{0, 2}, {150, 15}}",
         "class" : "Label",
         "attributes" : {
           "flex" : "WHLRTB",
