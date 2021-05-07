@@ -57,24 +57,7 @@ class ResultsTable(object):
         self.table_items = results        
         self.list_source = TData(self.xscale, reversed(self.table_items))
         self.table.data_source = self.list_source
-        self.table.delegate.action = self.write_notes
-        
-#    def update_table(self, new_ac_res, new_etime_res):
-#        self.table.reload()        
-#        with open(self.log_src) as json_file:
-#            self.log = json.load(json_file)        
-#        new_sorted_etime = sorted(list(new_etime_res))
-#        dt_list = []
-#        orig_dt_list = [] 
-#        for i in new_sorted_etime:
-#            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-#        for i in new_etime_res:
-#            orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-#        results = []
-#        for i in dt_list:
-#            results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm ' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
-#        self.table.data_source =  TData(self.xscale, reversed(results))
-
+        self.table.action = self.write_notes
         
     def update_table(self):
         self.table.reload()        
@@ -101,14 +84,7 @@ class ResultsTable(object):
     def write_notes(self, sender):
         with open(self.log_src) as json_file:
             self.log = json.load(json_file)
-            
-            
-        # Pop-up a textview with an enter button
-        # Display text stored in log
-        # Retrieve user text if entered
-        # Update json log of data
-        
-        
+
         print(self.list_source.items[sender.selected_row])
         print(sender.selected_row)
         
