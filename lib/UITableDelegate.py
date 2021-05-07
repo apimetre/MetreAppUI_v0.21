@@ -150,17 +150,19 @@ class ResultsTable(object):
 
         current_entry = self.log_entry
         entry_to_add = self.tdialog['text_entry'].text           
-        
-        self.log['Notes'][np.array(self.ref_list)[self.row_ix]]  = entry_to_add
-        if entry_to_add != '':
-            self.log['Key'][np.array(self.ref_list)[self.row_ix]]  = "*"  
-        else: 
-            self.log['Key'][np.array(self.ref_list)[self.row_ix]]   = ''          
-        with open(self.log_src, "w") as outfile:
-            json.dump(self.log, outfile)
-                
-        self.tdialog['test_notes'].text = self.log['Notes'][np.array(self.ref_list)[self.row_ix]] 
-        self.tdialog['text_entry'].text = ''     
+        try:
+            self.log['Notes'][np.array(self.ref_list)[self.row_ix]]  = entry_to_add
+            if entry_to_add != '':
+                self.log['Key'][np.array(self.ref_list)[self.row_ix]]  = "*"  
+            else: 
+                self.log['Key'][np.array(self.ref_list)[self.row_ix]]   = ''          
+            with open(self.log_src, "w") as outfile:
+                json.dump(self.log, outfile)
+                    
+            self.tdialog['test_notes'].text = self.log['Notes'][np.array(self.ref_list)[self.row_ix]] 
+            self.tdialog['text_entry'].text = ''    
+        except:
+            self.tdialog['text_entry'].text = ''    
         self.tdialog['text_entry'].end_editing()   
         self.update_table()
         self.table.delegate.action = self.write_notes    
