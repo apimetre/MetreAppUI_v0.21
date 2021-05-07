@@ -170,7 +170,7 @@ class ResultsTable(object):
         entry_to_add = self.tdialog['text_entry'].text           
         
         self.log['Notes'][self.row_ix] = entry_to_add
-        if self.entry_to_add != ''
+        if self.entry_to_add != '':
             self.log['Key'] = "*"        
         with open(self.log_src, "w") as outfile:
             json.dump(self.log, outfile)
