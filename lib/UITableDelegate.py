@@ -57,7 +57,7 @@ class ResultsTable(object):
         self.table_items = results        
         self.list_source = TData(self.xscale, reversed(self.table_items))
         self.table.data_source = self.list_source
-        self.table.action = self.write_notes
+        self.table.delegate.action = self.write_notes
         
     def update_table(self):
         self.table.reload()        
@@ -134,12 +134,12 @@ class ResultsTable(object):
                     
             self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
             self.tdialog['text_entry'].text = ''
-            
+    
         except:
             self.tdialog['text_entry'].text = ''
         self.tdialog['text_entry'].end_editing()        
         self.update_table()
-       
+        self.table.delegate.action = self.write_notes               
     def replace_log_notes(self, sender):
 
         current_entry = self.log_entry
@@ -157,3 +157,4 @@ class ResultsTable(object):
         self.tdialog['text_entry'].text = ''     
         self.tdialog['text_entry'].end_editing()   
         self.update_table()
+        self.table.delegate.action = self.write_notes    
