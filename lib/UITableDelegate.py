@@ -59,20 +59,45 @@ class ResultsTable(object):
         self.table.data_source = self.list_source
         self.table.delegate.action = self.write_notes
         
-    def update_table(self, new_ac_res, new_etime_res):
-        self.table.reload()
-        new_sorted_etime = sorted(list(new_etime_res))
+#    def update_table(self, new_ac_res, new_etime_res):
+#        self.table.reload()        
+#        with open(self.log_src) as json_file:
+#            self.log = json.load(json_file)        
+#        new_sorted_etime = sorted(list(new_etime_res))
+#        dt_list = []
+#        orig_dt_list = [] 
+#        for i in new_sorted_etime:
+#            dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+#        for i in new_etime_res:
+#            orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+#        results = []
+#        for i in dt_list:
+#            results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm ' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
+#        self.table.data_source =  TData(self.xscale, reversed(results))
+
+        
+    def update_table(self):
+        self.table.reload()        
+        with open(self.log_src) as json_file:
+            self.log = json.load(json_file)    
+            
+        self.etime = []
+        for val in self.log['Etime']:
+                tval = datetime.datetime.fromtimestamp(int(val))
+                self.etime.append(tval)     
+        self.acetone = self.log['Acetone']
+        new_sorted_etime = sorted(self.etime)
         dt_list = []
         orig_dt_list = [] 
         for i in new_sorted_etime:
             dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-        for i in new_etime_res:
+        for i in self.etime:
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
         for i in dt_list:
-            results.append(i + self.spacer + str(round(new_ac_res[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
+            results.append(i + self.spacer + str(round(self.acetone[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm ' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
         self.table.data_source =  TData(self.xscale, reversed(results))
-
+        
     def write_notes(self, sender):
         with open(self.log_src) as json_file:
             self.log = json.load(json_file)
@@ -127,7 +152,7 @@ class ResultsTable(object):
 
             new_entry = self.log_entry + spacer + entry_to_add 
             self.log['Notes'][self.row_ix] = new_entry
-            self.log['Key'][self.row_ix] = "*"
+            self.log['Key'] = "*"
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
@@ -136,18 +161,21 @@ class ResultsTable(object):
             
         except:
             self.tdialog['text_entry'].text = ''
-        self.tdialog['text_entry'].end_editing()
-
+        self.tdialog['text_entry'].end_editing()        
+        self.update_table()
+       
     def replace_log_notes(self, sender):
 
         current_entry = self.log_entry
         entry_to_add = self.tdialog['text_entry'].text           
         
         self.log['Notes'][self.row_ix] = entry_to_add
-        self.log['Key'][self.row_ix] = "*"        
+        if self.entry_to_add != ''
+            self.log['Key'] = "*"        
         with open(self.log_src, "w") as outfile:
             json.dump(self.log, outfile)
                 
         self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
         self.tdialog['text_entry'].text = ''     
-        self.tdialog['text_entry'].end_editing()  
+        self.tdialog['text_entry'].end_editing()   
+        self.update_table()
