@@ -170,7 +170,7 @@ class ResultsTable(object):
         entry_to_add = self.tdialog['text_entry'].text           
         
         self.log['Notes'][self.row_ix] = entry_to_add
-        if self.entry_to_add != '':
+        if entry_to_add != '':
             self.log['Key'][self.row_ix]  = "*"  
         else: 
             self.log['Key'][self.row_ix]  = ''          
