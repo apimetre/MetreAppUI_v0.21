@@ -138,7 +138,7 @@ class ResultsTable(object):
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
-            self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
+            self.tdialog['test_notes'].text = self.log['Notes'][np.array(self.ref_list)[self.row_ix]]
             self.tdialog['text_entry'].text = ''
     
         except:
@@ -159,7 +159,7 @@ class ResultsTable(object):
         with open(self.log_src, "w") as outfile:
             json.dump(self.log, outfile)
                 
-        self.tdialog['test_notes'].text = self.log['Notes'][self.row_ix]
+        self.tdialog['test_notes'].text = self.log['Notes'][np.array(self.ref_list)[self.row_ix]] 
         self.tdialog['text_entry'].text = ''     
         self.tdialog['text_entry'].end_editing()   
         self.update_table()
