@@ -450,7 +450,7 @@ class MainView(ui.View):
                        if DEBUG:
                             print(self.acetone)
                        self.results_table = self.v['results_table']
-                       self.restable_inst.update_table(self.acetone, self.etime, self.log['Key'])                        
+                       self.restable_inst.update_table(self.acetone, self.etime)                        
                    except:
                        self.app_console.text = 'The test from ' + dt + ' could not be processed.'
                        time.sleep(1)
