@@ -50,11 +50,12 @@ class ResultsTable(object):
         for i in self.sorted_etime:
             dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
-        self.ref_list = []
+        self.ref_list_inv = []
         for i in dt_list:
             results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
-            self.ref_list.append(np.where(np.array(orig_dt_list) == i)[0][0])
+            self.ref_list_inv.append(np.where(np.array(orig_dt_list) == i)[0][0])
                 
+        self.ref_list = reversed(self.ref_list_inv)
         self.table_items = results        
         self.list_source = TData(self.xscale, reversed(self.table_items))
         self.table.data_source = self.list_source
@@ -78,10 +79,12 @@ class ResultsTable(object):
         for i in self.etime:
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
         results = []
-        self.ref_list = []
+        self.ref_list_inv = []
         for i in dt_list:
             results.append(i + self.spacer + str(round(self.acetone[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm ' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
-            self.ref_list.append(np.where(np.array(orig_dt_list) == i)[0][0])
+            self.ref_list_inv.append(np.where(np.array(orig_dt_list) == i)[0][0])
+         
+        self.ref_list = reversed(self.ref_list_inv)
         self.table.data_source =  TData(self.xscale, reversed(results))
         
     def write_notes(self, sender):
