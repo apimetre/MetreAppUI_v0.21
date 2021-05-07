@@ -475,7 +475,7 @@ class BleUploader():
             
             try:
                 out_msg_txt =json.dumps({"cmd":"set_ble_state","active":False})
-                cmd_fn(out_msg_txt, "set_ble_state", to_max = 20)
+                cmd_fn(out_msg_txt, "set_ble_state", to_max = 10)
             except:
                 if self.DEBUG:
                     print('could not send disconnect command')
@@ -486,7 +486,7 @@ class BleUploader():
             
             try:          
                 out_msg2 =json.dumps({"cmd": "disconnect_ble"})
-                rstring, no_counter = cmd_fn(out_msg2, "disconnect_ble", to_max = 15)
+                rstring, no_counter = cmd_fn(out_msg2, "disconnect_ble", to_max = 5)
             except:
                 if self.DEBUG:
                     print('could not send disconnect command')
