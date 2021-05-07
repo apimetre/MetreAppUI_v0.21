@@ -277,7 +277,7 @@ class MainView(ui.View):
                 self.instr_icon.alpha = 0.1
                 self.connect_button.action = self.bleStatus()
                 self.connect_button.alpha =1
-                self.results_table.y != self.orig_console_loc:
+                if self.results_table.y != self.orig_console_loc:
                     self.results_table.y = (self.results_table.y - self.app_console.height/2)*2*self.xscaler
 
             
