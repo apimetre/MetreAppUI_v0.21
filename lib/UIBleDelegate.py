@@ -62,8 +62,8 @@ def getPlot(bview, src, initial = True):
         sorted_key = []
         for i in log['Etime']:
             ref_val = np.where(np.array(log['Etime']) == i)[0][0]
-            sorted_dt.append(log['DateTime'][ref_val]
-            sorted_ac.append(log['Acetone'][ref_val]
+            sorted_dt.append(log['DateTime'][ref_val])
+            sorted_ac.append(log['Acetone'][ref_val])
             sorted_instr.append(log['Instr'][ref_val])
             sorted_sensor.append(log['Sensor'][ref_val])
             sorted_notes.append(log['Notes'][ref_val])
