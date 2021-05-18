@@ -53,6 +53,29 @@ def getPlot(bview, src, initial = True):
             bview.load_html(updating_html)
         with open(src + '/log/log_003.json') as json_file:
             log = json.load(json_file)
+        sorted_etime = list(sorted(log['Etime']))
+        sorted_dt = []
+        sorted_ac = []
+        sorted_instr = []
+        sorted_sensor = []
+        sorted_notes =[]
+        sorted_key = []
+        for i in log['Etime']:
+            ref_val = np.where(np.array(log['Etime']) == i)[0][0]
+            sorted_dt.append(log['DateTime'][ref_val]
+            sorted_ac.append(log['Acetone'][ref_val]
+            sorted_instr.append(log['Instr'][ref_val])
+            sorted_sensor.append(log['Sensor'][ref_val])
+            sorted_notes.append(log['Notes'][ref_val])
+            sorted_key.append(log['Key'][ref_val])
+        
+        log["Etime"] = sorted_etime
+        log["DateTime"] = sorted_dt
+        log["Acetone"] = sorted_ac
+        log["Sensor"] = sorted_sensor
+        log["Instr"] = sorted_instr
+        log["Notes"] = sorted_notes
+        log["Key"] = sorted_key
         logData = json.dumps(log)
         try:
             tzData = json.loads(src + '/log/timezone_settings.json')
@@ -61,6 +84,10 @@ def getPlot(bview, src, initial = True):
         response = requests.post(url, files = [('json_file', ('log.json', logData, 'application/json')), ('tz_info', ('tz.json', tzData, 'application/json'))])
         
         bview.load_html(response.text)
+        
+    # Handles exception if no previous log data
+    except:
+        bview.load_html(nolog_html)
         
     # Handles exception if no previous log data
     except:
