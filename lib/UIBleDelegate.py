@@ -9,6 +9,7 @@ import threading
 import fnmatch
 import pprint
 import math
+import numpy as np
 from functools import partial
 
 # Pythonista imports
