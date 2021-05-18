@@ -490,6 +490,9 @@ class BleUploader():
             except:
                 if self.DEBUG:
                     print('could not send disconnect command')
+                    ble_icon_path = 'images/ble_off.png'
+                    self.ble_status_icon_.image = ui.Image.named(ble_icon_path)
+                    self.ble_status_icon_.background_color = 'black'
             ConsoleAlert('Eject Mouthpiece if not yet removed!', self.v_)
             ble_icon_path = 'images/ble_off.png'
             self.ble_status_icon_.image = ui.Image.named(ble_icon_path)
