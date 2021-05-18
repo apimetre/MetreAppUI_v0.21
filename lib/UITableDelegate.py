@@ -40,12 +40,12 @@ class ResultsTable(object):
             self.spacer = '    '
         else:
             self.spacer = '  '
-        self.sorted_etime = sorted(list(self.etime))
         with open(self.log_src) as json_file:
             self.log = json.load(json_file) 
             
         self.etime = self.log['Etime']   
-        
+        self.sorted_etime = sorted(list(self.etime))
+
         self.dt_etime = []
         for val in self.etime:
                 tval = datetime.datetime.fromtimestamp(int(val))
