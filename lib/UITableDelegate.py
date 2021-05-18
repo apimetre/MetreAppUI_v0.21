@@ -106,11 +106,7 @@ class ResultsTable(object):
         
     def write_notes(self, sender):
         with open(self.log_src) as json_file:
-            self.log = json.load(json_file)
-
-        print(self.table.data_source.items[sender.selected_row])
-        print(sender.selected_row)
-        
+            self.log = json.load(json_file)        
         self.row_ix = sender.selected_row
         self.log_entry = self.log['Notes'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]]#self.log['Notes'][self.row_ix]
         
