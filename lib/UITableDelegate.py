@@ -27,9 +27,7 @@ class TData (ui.ListDataSource):
 class ResultsTable(object):
     def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale, cwd):
         self.subview = subview_
-        self.table = table_
-        self.etime = etime_res
-        self.ac = ac_res       
+        self.table = table_      
         self.xscale = xscale
         self.yscale = yscale
         self.cwd = cwd
@@ -43,41 +41,59 @@ class ResultsTable(object):
         else:
             self.spacer = '  '
         self.sorted_etime = sorted(list(self.etime))
-        dt_list = []     
-        orig_dt_list = []   
-        for i in self.etime:
-            orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-        for i in self.sorted_etime:
+        with open(self.log_src) as json_file:
+            self.log = json.load(json_file) 
+            
+        self.etime = self.log['Etime']   
+        
+        self.dt_etime = []
+        for val in self.etime:
+                tval = datetime.datetime.fromtimestamp(int(val))
+                self.dt_etime.append(tval)     
+        self.acetone = self.log['Acetone']
+        new_sorted_etime = sorted(list(self.etime)) # This is the sorted version of self.log['Etime']
+        
+        new_sorted_dt = sorted(self.dt_etime)
+        
+        self.rev_sort_etime = list(reversed(new_sorted_etime))         
+        dt_list = []
+        orig_dt_list = [] 
+        for i in new_sorted_dt:
             dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+        for i in self.dt_etime:
+            orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+            
         results = []
         self.ref_list_inv = []
         for i in dt_list:
-            results.append(i + self.spacer + str(round(self.ac[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
+            results.append(i + self.spacer + str(round(self.acetone[np.where(np.array(orig_dt_list) == i)[0][0]],1)) + ' ppm ' + np.array(self.log['Key'])[np.where(np.array(orig_dt_list) == i)[0][0]])
             self.ref_list_inv.append(np.where(np.array(orig_dt_list) == i)[0][0])
-                
-        self.ref_list = reversed(self.ref_list_inv)
-        self.table_items = results        
-        self.list_source = TData(self.xscale, reversed(self.table_items))
-        self.table.data_source = self.list_source
+         
+        self.ref_list = list(reversed(self.ref_list_inv))
+        self.table.data_source =  TData(self.xscale, reversed(results))
         self.table.delegate.action = self.write_notes
         
     def update_table(self):
         self.table.reload()        
         with open(self.log_src) as json_file:
-            self.log = json.load(json_file)    
+            self.log = json.load(json_file) 
             
-        self.etime = []
-        for val in self.log['Etime']:
+        self.etime = self.log['Etime']   
+        self.dt_etime = []
+        for val in self.etime:
                 tval = datetime.datetime.fromtimestamp(int(val))
-                self.etime.append(tval)     
+                self.dt_etime.append(tval)     
         self.acetone = self.log['Acetone']
-        new_sorted_etime = sorted(self.etime)
+        new_sorted_etime = sorted(list(self.etime)) # This is the sorted version of self.log['Etime']
+        new_sorted_dt = sorted(self.dt_etime)
+        self.rev_sort_etime = list(reversed(new_sorted_etime)) 
         dt_list = []
         orig_dt_list = [] 
-        for i in new_sorted_etime:
+        for i in new_sorted_dt:
             dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
-        for i in self.etime:
+        for i in self.dt_etime:
             orig_dt_list.append(i.strftime("%b %d, %Y, %I:%M %p"))
+            
         results = []
         self.ref_list_inv = []
         for i in dt_list:
@@ -85,20 +101,21 @@ class ResultsTable(object):
             self.ref_list_inv.append(np.where(np.array(orig_dt_list) == i)[0][0])
          
         self.ref_list = reversed(self.ref_list_inv)
+                
         self.table.data_source =  TData(self.xscale, reversed(results))
         
     def write_notes(self, sender):
         with open(self.log_src) as json_file:
             self.log = json.load(json_file)
 
-        print(self.list_source.items[sender.selected_row])
+        print(self.table.data_source.items[sender.selected_row])
         print(sender.selected_row)
         
         self.row_ix = sender.selected_row
-        self.log_entry = self.log['Notes'][self.row_ix]
+        self.log_entry = self.log['Notes'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]]#self.log['Notes'][self.row_ix]
         
         self.tdialog = ui.load_view('tabledialog')
-        self.tdialog.name = self.list_source.items[sender.selected_row]
+        self.tdialog.name = self.table.data_source.items[sender.selected_row]
         self.tdialog.frame = (0,0,600,150)
         update_button = self.tdialog['update']
         replace_button = self.tdialog['replace']
@@ -111,6 +128,7 @@ class ResultsTable(object):
         
 
     def update_log_notes(self, sender):
+        self.update_table()
 
         current_entry = self.log_entry
         entry_to_add = self.tdialog['text_entry'].text
@@ -133,36 +151,39 @@ class ResultsTable(object):
                     spacer = ''           
 
             new_entry = self.log_entry + spacer + entry_to_add 
-            self.log['Notes'][np.array(self.ref_list)[self.row_ix]]  = new_entry
-            self.log['Key'][np.array(self.ref_list)[self.row_ix]]   = "*"
+
+
+            self.log['Notes'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]] = new_entry
+                              
+            
+            self.log['Key'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]] = " *"
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
-            self.tdialog['test_notes'].text = self.log['Notes'][np.array(self.ref_list)[self.row_ix]]
+            self.tdialog['test_notes'].text = self.log['Notes'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]]
             self.tdialog['text_entry'].text = ''
-    
         except:
             self.tdialog['text_entry'].text = ''
         self.tdialog['text_entry'].end_editing()        
         self.update_table()
         self.table.delegate.action = self.write_notes               
     def replace_log_notes(self, sender):
-
+        self.update_table()
         current_entry = self.log_entry
         entry_to_add = self.tdialog['text_entry'].text           
         try:
-            self.log['Notes'][np.array(self.ref_list)[self.row_ix]]  = entry_to_add
+            self.log['Notes'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]] = entry_to_add
             if entry_to_add != '':
-                self.log['Key'][np.array(self.ref_list)[self.row_ix]]  = "*"  
+                self.log['Key'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]] = " *"  
             else: 
-                self.log['Key'][np.array(self.ref_list)[self.row_ix]]   = ''          
+                self.log['Key'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]] = ''          
             with open(self.log_src, "w") as outfile:
                 json.dump(self.log, outfile)
                     
-            self.tdialog['test_notes'].text = self.log['Notes'][np.array(self.ref_list)[self.row_ix]] 
+            self.tdialog['test_notes'].text = self.log['Notes'][np.where(np.array(self.etime) == self.rev_sort_etime[self.row_ix])[0][0]]
             self.tdialog['text_entry'].text = ''    
         except:
             self.tdialog['text_entry'].text = ''    
         self.tdialog['text_entry'].end_editing()   
         self.update_table()
-        self.table.delegate.action = self.write_notes    
+        self.table.delegate.action = self.write_notes 
