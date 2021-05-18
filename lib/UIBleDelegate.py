@@ -88,10 +88,7 @@ def getPlot(bview, src, initial = True):
     # Handles exception if no previous log data
     except:
         bview.load_html(nolog_html)
-        
-    # Handles exception if no previous log data
-    except:
-        bview.load_html(nolog_html)
+ 
         
 class BokehDelegate(object):
     def __init__(self, subview_, cwd_):
