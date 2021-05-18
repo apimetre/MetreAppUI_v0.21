@@ -25,7 +25,7 @@ class TData (ui.ListDataSource):
     
 
 class ResultsTable(object):
-    def __init__(self, subview_, table_, ac_res, etime_res, xscale, yscale, cwd):
+    def __init__(self, subview_, table_, xscale, yscale, cwd):
         self.subview = subview_
         self.table = table_      
         self.xscale = xscale
