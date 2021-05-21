@@ -134,7 +134,7 @@ class BleUploader():
             #dev_icon_path = 'images/MetreAceDev.png'
             self.d0.alpha = 0.75
             #self.instr_icon.image = ui.Image.named(dev_icon_path)
-            self.instr_icon.alpha = 0.6
+            self.instr_icon.alpha = 0.75
             
             
         def is_dst(dt=None, tzone="UTC"):
