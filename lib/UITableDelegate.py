@@ -18,8 +18,9 @@ class TData (ui.ListDataSource):
     def tableview_cell_for_row(self, tableview, section, row):
         cell = ui.TableViewCell()
         cell.text_label.text = str(self.items[row])
-        if self.xscale < 2:
-        	cell.text_label.font = ("Helvetica", 10)
+        scaled_size = round(self.scale, 1) *13
+
+        cell.text_label.font = ("Helvetica", scaled_size)
         cell.text_label.alignment = ui.ALIGN_CENTER
         return cell
     
