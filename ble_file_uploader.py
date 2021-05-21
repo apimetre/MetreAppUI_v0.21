@@ -35,7 +35,6 @@ class BleUploader():
         self.version_id = version_id
         self.POPOVER_WIDTH = 500
         self.SEND_TEXT_VIEW_HEIGHT = 30
-        self.POPOVER_DIALOG_NAME = 'km_ble_test.py'
         self.PERIPHERAL_PREAMBLE = 'CIRCUITPY'
         self.DEBUG = False
         self.CONSOLE_WIDTH = 140
@@ -135,7 +134,7 @@ class BleUploader():
             #dev_icon_path = 'images/MetreAceDev.png'
             self.d0.alpha = 0.75
             #self.instr_icon.image = ui.Image.named(dev_icon_path)
-            self.instr_icon.alpha = 0.25
+            self.instr_icon.alpha = 0.6
             
             
         def is_dst(dt=None, tzone="UTC"):
@@ -246,12 +245,12 @@ class BleUploader():
                     return resp_string, cmd_counter
     
             
-        time.sleep(2)
+        time.sleep(1)
         if self.py_ble_uart.peripheral:
-            self.v_['ble_status'].text = 'Connected'
+            self.v_['ble_status'].text = ''
             print(self.console_box_.height)
             self.v_['results_table'].y = self.v_['results_table'].y/(2*self.xscale) + self.console_box_.height/2
-            self.console_box_.text = "Connected"
+            #self.console_box_.text = "Connected"
             self.d0.alpha = 0.75
             if self.DEBUG:
                 print('will be using ' + self.cwd + '/data_files/dat_files/ as current working directory for writing log files')
@@ -278,6 +277,8 @@ class BleUploader():
             time.sleep(2)
             out_msg0 =json.dumps({"cmd": "set_time_offset","offset": str(offset_hrs)})
             r0, no_counter = cmd_fn(out_msg0, "set_time_offset")
+            self.console_box_.text = ''
+            self.v_['ble_status'].text = 'Connected'
             
 
             time.sleep(0.5)
@@ -471,11 +472,11 @@ class BleUploader():
             self.d3.alpha =  0
             self.d4.alpha =  0
 
-            self.instr_icon.alpha = 0.1
+            self.instr_icon.alpha = 0.25
             
             try:
                 out_msg_txt =json.dumps({"cmd":"set_ble_state","active":False})
-                cmd_fn(out_msg_txt, "set_ble_state", to_max = 10)
+                cmd_fn(out_msg_txt, "set_ble_state", warning = True, to_max = 15)
             except:
                 if self.DEBUG:
                     print('could not send disconnect command')
@@ -486,7 +487,7 @@ class BleUploader():
             
             try:          
                 out_msg2 =json.dumps({"cmd": "disconnect_ble"})
-                rstring, no_counter = cmd_fn(out_msg2, "disconnect_ble", to_max = 5)
+                rstring, no_counter = cmd_fn(out_msg2, "disconnect_ble", warning = True, to_max = 15)
             except:
                 if self.DEBUG:
                     print('could not send disconnect command')
