@@ -112,7 +112,7 @@ class MainView(ui.View):
         etre_w = self.v['A'].x - self.v['etre'].x
         A_w = self.v['ce'].x - self.v['A'].x
         
-        self.v['etre'].x = self.star_button.x * self.xscaler + M_w * self.xscaler
+        self.v['etre'].x = self.star_button.x + M_w * self.xscaler
         self.v['M'].x = self.v['etre'].x - M_w
         self.v['A'].x = self.v['etre'].x + etre_w 
         self.v['ce'].x = self.v['A'].x + A_w
@@ -170,7 +170,7 @@ class MainView(ui.View):
             self.star_button.alpha = 0.5
             self.ble_status.text = ''
         else:
-            self.ble_status.text = 'CONNECT'
+            self.ble_status.text = 'Ready to Connect'
             self.bleStatus()
             
     def will_close(self) -> None:
@@ -230,7 +230,7 @@ class MainView(ui.View):
         self.ble_status_icon.image = ui.Image.named(ble_icon_path)
     
         if not loaded:
-            self.ble_status.text= 'Connecting...'
+            self.ble_status.text= 'Ready to Connect'
             ble_file_uploader = BleUploader(self.app_console, self.ble_status_icon, self.v,  self.xscaler, self.yscaler, APP_VERSION, DEBUG)
             ready_status = ble_file_uploader.execute_transfer()
             
@@ -241,6 +241,7 @@ class MainView(ui.View):
                 
                 
                 # HERE is where you trigger the main function (i.e. after the button is pushed)
+                self.calc_icon.alpha = 1
                 self.main()
                 self.connect_button.alpha = 1
                 return done
@@ -250,7 +251,7 @@ class MainView(ui.View):
                     ble_file_uploader.py_ble_uart.peripheral = False
                     self.ble_icon_path = 'images/ble_off.png'
                     self.ble_status_icon.image = ui.Image.named(ble_icon_path)
-                    self.ble_status.text= 'CONNECT'
+                    self.ble_status.text= 'Ready to Connect'
                     self.startbutton.alpha = 1
                 else:
                     if DEBUG:
@@ -260,7 +261,7 @@ class MainView(ui.View):
                     ble_icon_path = 'images/ble_off.png'
                     self.ble_status_icon.image = ui.Image.named(ble_icon_path)
                     self.ble_status_icon.background_color = 'black'
-                    self.ble_status.text= 'CONNECT'
+                    self.ble_status.text= 'Ready to Connect'
                     self.star_button.alpha = 1
                     
                 ### THIS IS WHERE YOU SHOULD GIVE THE OPTION TO CONNECT AGAIN
@@ -330,39 +331,39 @@ class MainView(ui.View):
                 json.dump(self.log, outfile)        
     ########################################
     def blink(self):     
-        if self.d5.alpha == 0.5:
-            self.d6.alpha= 0.5
+        if self.d5.alpha == 0.75:
+            self.d6.alpha= 0.75
             self.d7.alpha= 0
             self.d8.alpha= 0
             self.d9.alpha= 0
             self.d5.alpha= 0
-        elif self.d6.alpha == 0.5:
-            self.d7.alpha=  0.5
+        elif self.d6.alpha == 0.75:
+            self.d7.alpha=  0.75
             self.d8.alpha=  0
             self.d9.alpha= 0
             self.d5.alpha=  0
             self.d6.alpha=  0
-        elif self.d7.alpha == 0.5:
-            self.d8.alpha=  0.5
+        elif self.d7.alpha == 0.75:
+            self.d8.alpha=  0.75
             self.d9.alpha= 0
             self.d5.alpha=  0
             self.d6.alpha=  0
             self.d7.alpha=  0
-        elif self.d8.alpha == 0.5:
-            self.d9.alpha=  0.5
+        elif self.d8.alpha == 0.75:
+            self.d9.alpha=  0.75
             self.d5.alpha= 0
             self.d6.alpha=  0
             self.d7.alpha=  0
             self.d8.alpha=  0         
-        elif self.d9.alpha == 0.5:
-            self.d5.alpha=  0.5
+        elif self.d9.alpha == 0.75:
+            self.d5.alpha=  0.75
             self.d6.alpha= 0
             self.d7.alpha=  0
             self.d8.alpha=  0
             self.d9.alpha=  0    
     
     def main(self):
-        self.ble_status.alpha = 0.5 
+        self.ble_status.alpha = 0.75 
         self.calc_icon.apha = 1
         global process_done
         process_done = False
@@ -387,11 +388,11 @@ class MainView(ui.View):
         numOfFiles = len(files)
         self.app_console.alpha = 1
         if numOfFiles >1:
-            self.app_console.text = str(numOfFiles-1) + ' breath tests are ready to be processed. Beginning data processing...'
-            self.d5.alpha = 0.5
+            self.app_console.text = str(numOfFiles) + ' breath tests are ready to be processed. Beginning data processing...'
+            self.d5.alpha = 0.75
         elif numOfFiles == 1:
             self.app_console.text = '1 breath test is ready to be processed. Beginning data processing...'
-            self.d5.alpha = 0.5
+            self.d5.alpha = 0.75
         else:
             self.app_console.text = 'No breath tests are ready to be processed at this time'
         time.sleep(3)
@@ -416,48 +417,46 @@ class MainView(ui.View):
                    process_done = False
                    with open(json_path) as f:
                        data_dict = json.load(f)
-                   try:
-                       data_dict_to_send = process_test.process(data_dict, dt, DEBUG)
-                       url = 'https://us-central1-metre3-1600021174892.cloudfunctions.net/metre-7500'
-                       data_dict_to_send['App_Version'] = APP_VERSION
-                       json_text = json.dumps(data_dict_to_send)
-                       self.app_console.text = 'Uploading and interpreting results from test from your ' + dt +' test. This may take a few moments...'
-                       pt = threading.Thread(target = animate_bar) # don't do this unless u start a parallel thread to send request
-                       pt.start()
-                       if DEBUG:
-                           print('sending to cloud')
-                       start = time.time()
-                       response = requests.post(url, files = [('json_file', ('test.json', json_text, 'application/json'))])
-                       process_done = True
-                       elapsedtime = time.time()-start
-                       if DEBUG: 
-                           print('received response--response time ' + str(elapsedtime))
-                       response_json = json.loads(response.text)
-                       pt.join()
-                       process_done = True
-                       
-                       self.app_console.text = 'Results from ' + dt + ': ' + response_json['pred_content']
-                       if DEBUG:
-                            print(response_json['pred_content'])
-                       newlog = {'Etime': response_json['refnum'],
-                                  'DateTime': response_json['DateTime'],
-                                  'Acetone': float(response_json['Acetone']),
-                                  'Sensor': response_json['sensor'],
-                                  'Instr': response_json['instrument'],
-                                  'Notes': '',
-                                  'Key': ''}
-                       for key, value in self.log.items():
-                          self.log[key].append(newlog[key])
-                       with open(self.cwd + "/log/log_003.json", "w") as outfile:
-                          json.dump(self.log, outfile)
-                       self.getData()
-                       if DEBUG:
-                            print(self.acetone)
-                       self.results_table = self.v['results_table']
-                       self.restable_inst.update_table()                        
-                   except:
-                       self.app_console.text = 'The test from ' + dt + ' could not be processed.'
-                       time.sleep(1)
+                   data_dict_to_send = process_test.process(data_dict, dt, DEBUG)
+                   url = 'https://us-central1-metre3-1600021174892.cloudfunctions.net/metre-7500'
+                   data_dict_to_send['App_Version'] = APP_VERSION
+                   json_text = json.dumps(data_dict_to_send)
+                   self.app_console.text = 'Uploading and interpreting results from test from your ' + dt +' test. This may take a few moments...'
+                   pt = threading.Thread(target = animate_bar) # don't do this unless u start a parallel thread to send request
+                   pt.start()
+                   if DEBUG:
+                       print('sending to cloud')
+                   start = time.time()
+                   response = requests.post(url, files = [('json_file', ('test.json', json_text, 'application/json'))])
+                   process_done = True
+                   elapsedtime = time.time()-start
+                   if DEBUG: 
+                       print('received response--response time ' + str(elapsedtime))
+                   response_json = json.loads(response.text)
+                   pt.join()
+                   process_done = True
+                   print(response_json)
+                   self.app_console.text = 'Results from ' + dt + ': ' + response_json['pred_content']
+                   if DEBUG:
+                        print(response_json['pred_content'])
+                   print(response_json)
+                   newlog = {'Etime': response_json['refnum'],
+                              'DateTime': response_json['DateTime'],
+                              'Acetone': float(response_json['Acetone']),
+                              'Sensor': response_json['sensor'],
+                              'Instr': response_json['instrument'],
+                              'Notes': '',
+                              'Key': ''}
+                   for key, value in self.log.items():
+                      self.log[key].append(newlog[key])
+                   with open(self.cwd + "/log/log_003.json", "w") as outfile:
+                      json.dump(self.log, outfile)
+                   self.getData()
+                   if DEBUG:
+                        print(self.acetone)
+                   self.results_table = self.v['results_table']
+                   self.restable_inst.update_table()                        
+
                    shutil.move(source_path + file, self.cwd +'/data_files/processed_files/' + file)
                else:
                    continue
